@@ -1,0 +1,118 @@
+{
+  "contractName": "EqHunt",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.12+commit.7709ece9\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/wes/eq-hunt/contracts/EqHunt.sol\":\"EqHunt\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/wes/eq-hunt/contracts/EqHunt.sol\":{\"keccak256\":\"0x80ea15058c49c8c12d2a0812cc416a6e61785fc1df8fc1db5c101b653d7c1522\",\"urls\":[\"bzz-raw://e3b2b1fb243914ca4bfa1d2804fb35e376b24d6f3837d93c0cd193e6fde42e8b\",\"dweb:/ipfs/Qmaznnh8WQnoghnRKr3kbreJvsWPgBpxuYzYGyzLnTV6am\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a72315820a25e261dc21d65d4408750209dc0daa301150d707d9f135fe28179752bdc117764736f6c634300050c0032",
+  "deployedBytecode": "0x6080604052600080fdfea265627a7a72315820a25e261dc21d65d4408750209dc0daa301150d707d9f135fe28179752bdc117764736f6c634300050c0032",
+  "sourceMap": "34:20:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;34:20:0;;;;;;;",
+  "deployedSourceMap": "34:20:0:-;;;;;",
+  "source": "pragma solidity >=0.4.21 <0.6.0;\n\ncontract EqHunt {\n\n}\n",
+  "sourcePath": "/home/wes/eq-hunt/contracts/EqHunt.sol",
+  "ast": {
+    "absolutePath": "/home/wes/eq-hunt/contracts/EqHunt.sol",
+    "exportedSymbols": {
+      "EqHunt": [
+        2
+      ]
+    },
+    "id": 3,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".21",
+          "<",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:32:0"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 2,
+        "linearizedBaseContracts": [
+          2
+        ],
+        "name": "EqHunt",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 3,
+        "src": "34:20:0"
+      }
+    ],
+    "src": "0:55:0"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/wes/eq-hunt/contracts/EqHunt.sol",
+    "exportedSymbols": {
+      "EqHunt": [
+        2
+      ]
+    },
+    "id": 3,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".21",
+          "<",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:32:0"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 2,
+        "linearizedBaseContracts": [
+          2
+        ],
+        "name": "EqHunt",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 3,
+        "src": "34:20:0"
+      }
+    ],
+    "src": "0:55:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.12+commit.7709ece9.Emscripten.clang"
+  },
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x6337018199471A5f789f191568C4Da005848c5F0",
+      "transactionHash": "0x455f784243b66b1e026cc81039f6442414257276d526bc2e0457d8b362e503ea"
+    }
+  },
+  "schemaVersion": "3.0.19",
+  "updatedAt": "2019-12-15T16:24:40.388Z",
+  "networkType": "ethereum",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
