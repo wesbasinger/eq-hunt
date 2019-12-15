@@ -16,4 +16,11 @@ contract("EqHunt", async (accounts) => {
     assert.isAbove(Number(newBal), Number(priorBal));
   })
 
+  it("will create an equation", async () => {
+    let eqHunt = await EqHunt.deployed();
+    await eqHunt.create("AAAA", "2x=10", 5);
+    let equation = await eqHunt.equations("AAAA");
+    assert.equal(equation, "2x=10");
+  })
+
 })
