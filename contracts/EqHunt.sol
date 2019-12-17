@@ -24,6 +24,17 @@ contract EqHunt {
     return equations[_id].repr;
   }
 
+  function check(string memory _id, int _answer) public view returns(bool) {
+
+    require(equations[_id].exists);
+    
+    if(equations[_id].answer == _answer) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   function() payable external {}
 
 }

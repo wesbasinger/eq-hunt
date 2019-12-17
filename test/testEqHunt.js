@@ -30,4 +30,21 @@ contract("EqHunt", async (accounts) => {
     await truffleAssert.reverts(eqHunt.create("AAAA", "2x=10", 5));
   })
 
+  it("can check an equation with correct answer", async() => {
+    let eqHunt = await EqHunt.deployed();
+    const result = await eqHunt.check("AAAA", 5);
+    assert.equal(result, true);
+  })
+
+  it("can check an equation with an incorrect answer", async() => {
+    let eqHunt = await EqHunt.deployed();
+    const result = await eqHunt.check("AAAA", -4);
+    assert.equal(result, false);
+  })
+
+  it("will revert when checking a nonexistent equation", async() => {
+    let eqHunt = await EqHunt.deployed();
+    await truffleAssert.reverts(eqHunt.check("ZZZZ", 10));
+  })
+
 })
