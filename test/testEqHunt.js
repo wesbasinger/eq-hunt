@@ -1,3 +1,5 @@
+const truffleAssert = require('truffle-assertions');
+
 const EqHunt = artifacts.require("EqHunt");
 
 contract("EqHunt", async (accounts) => {
@@ -19,8 +21,13 @@ contract("EqHunt", async (accounts) => {
   it("will create an equation", async () => {
     let eqHunt = await EqHunt.deployed();
     await eqHunt.create("AAAA", "2x=10", 5);
-    let equation = await eqHunt.equations("AAAA");
+    let equation = await eqHunt.getEquation("AAAA");
     assert.equal(equation, "2x=10");
+  })
+
+  it("will not allow duplicate equation creation", async() => {
+    let eqHunt = await EqHunt.deployed();
+    await truffleAssert.reverts(eqHunt.create("AAAA", "2x=10", 5));
   })
 
 })
