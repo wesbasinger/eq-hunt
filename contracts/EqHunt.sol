@@ -27,7 +27,7 @@ contract EqHunt {
   function check(string memory _id, int _answer) public view returns(bool) {
 
     require(equations[_id].exists);
-    
+
     if(equations[_id].answer == _answer) {
       return true;
     } else {
@@ -35,6 +35,16 @@ contract EqHunt {
     }
   }
 
+  function rand() internal view returns(uint8) {
+    return uint8(uint256(keccak256(abi.encode(block.timestamp)))%10) + 1;
+  }
+
   function() payable external {}
+
+  // TEST CODE
+
+  function testRand() public view returns(uint8) {
+    return rand();
+  }
 
 }

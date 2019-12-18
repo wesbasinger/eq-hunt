@@ -47,4 +47,14 @@ contract("EqHunt", async (accounts) => {
     await truffleAssert.reverts(eqHunt.check("ZZZZ", 10));
   })
 
+  it("will generate a random number between 1 and 10 inclusive", async() => {
+    let eqHunt = await EqHunt.deployed();
+    for(let i=0; i<100; i++) {
+      const result = await eqHunt.testRand();
+      const numResult = Number(result);
+      assert.isAbove(numResult, 0);
+      assert.isBelow(numResult,10);
+    }
+  })
+
 })
