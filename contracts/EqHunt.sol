@@ -35,16 +35,24 @@ contract EqHunt {
     }
   }
 
-  function rand() internal view returns(uint8) {
-    return uint8(uint256(keccak256(abi.encode(block.timestamp)))%10) + 1;
+  function rand() internal view returns(uint256) {
+    return uint256(uint256(keccak256(abi.encode(block.timestamp)))%10) + 1;
+  }
+
+  function payout() internal view returns(uint256) {
+    return 40000000000000000/rand();
   }
 
   function() payable external {}
 
   // TEST CODE
 
-  function testRand() public view returns(uint8) {
+  function testRand() public view returns(uint256) {
     return rand();
+  }
+
+  function testPayout() public view returns(uint256) {
+    return payout();
   }
 
 }

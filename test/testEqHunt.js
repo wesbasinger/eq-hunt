@@ -57,4 +57,14 @@ contract("EqHunt", async (accounts) => {
     }
   })
 
+  it("will generate a payout between 4000000000000000 and 40000000000000000 inclusive", async() => {
+    let eqHunt = await EqHunt.deployed();
+    for(let i=0; i<100; i++) {
+      const result = await eqHunt.testPayout();
+      const numResult = Number(result);
+      assert.isAbove(numResult, 4000000000000000);
+      assert.isBelow(numResult, 40000000000000000);
+    }
+  })
+
 })
