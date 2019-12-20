@@ -9,6 +9,13 @@ contract EqHunt {
   }
 
   mapping(string => Equation) equations;
+  uint256 private balance;
+  address private owner;
+
+  constructor() public payable {
+    owner = msg.sender;
+    balance = msg.value;
+  }
 
   function create(string memory _id, string memory _repr, int _answer) public {
 
@@ -43,6 +50,12 @@ contract EqHunt {
     return 40000000000000000/rand();
   }
 
+  function reward(address payable _payee, uint256 _amount) internal {
+    require(balance>=_amount);
+    _payee.transfer(_amount);
+    balance -= _amount;
+  }
+
   function() payable external {}
 
   // TEST CODE
@@ -53,6 +66,14 @@ contract EqHunt {
 
   function testPayout() public view returns(uint256) {
     return payout();
+  }
+
+  function testReward(address payable _payee, uint256 _amount) public {
+    reward(_payee, _amount);
+  }
+
+  function getBalance() public view returns (uint256) {
+    return balance;
   }
 
 }

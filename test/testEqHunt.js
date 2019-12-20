@@ -52,8 +52,8 @@ contract("EqHunt", async (accounts) => {
     for(let i=0; i<100; i++) {
       const result = await eqHunt.testRand();
       const numResult = Number(result);
-      assert.isAbove(numResult, 0);
-      assert.isBelow(numResult,10);
+      assert.isAtLeast(numResult, 0);
+      assert.isAtMost(numResult,10);
     }
   })
 
@@ -62,9 +62,16 @@ contract("EqHunt", async (accounts) => {
     for(let i=0; i<100; i++) {
       const result = await eqHunt.testPayout();
       const numResult = Number(result);
-      assert.isAbove(numResult, 4000000000000000);
-      assert.isBelow(numResult, 40000000000000000);
+      assert.isAtLeast(numResult, 4000000000000000);
+      assert.isAtMost(numResult, 40000000000000000);
     }
+  })
+
+  it("is funded with an initial balance", async () => {
+    let eqHunt = await EqHunt.deployed();
+    const result = await eqHunt.getBalance();
+    const numResult = Number(result);
+    assert.isAbove(numResult, 0);
   })
 
 })
