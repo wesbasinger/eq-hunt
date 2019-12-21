@@ -131,6 +131,15 @@ contract("EqHunt", async (accounts) => {
     assert.equal(numSolvers, 2);
   })
 
+  it("can return all the solvers of an equation", async () => {
+    let eqHunt = await EqHunt.deployed();
+    const solvers = await eqHunt.getSolvers("BBBB");
+    const firstSolverIndex = solvers.indexOf(accounts[0]);
+    const secondSolverIndex = solvers.indexOf(accounts[1]);
+    assert.isAbove(firstSolverIndex, -1);
+    assert.isAbove(secondSolverIndex, -1);
+  })
+
   it("will not solve a nonexistent equation", async() => {
     let eqHunt = await EqHunt.deployed();
     await truffleAssert.reverts(eqHunt.solve("ZZZZ", 10));

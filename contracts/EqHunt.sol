@@ -90,6 +90,10 @@ contract EqHunt {
     return _solvers.length;
   }
 
+  function getSolvers(string memory _id) public view returns(address[] memory) {
+    return solvers[_id];
+  }
+
   function() payable external {}
 
   // TEST CODE
