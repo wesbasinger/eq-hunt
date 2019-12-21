@@ -68,8 +68,8 @@ contract EqHunt {
     return payout();
   }
 
-  function testReward(address payable _payee, uint256 _amount) public {
-    reward(_payee, _amount);
+  function testReward(address payable _payee) public {
+    reward(_payee, payout());
   }
 
   function getBalance() public view returns (uint256) {

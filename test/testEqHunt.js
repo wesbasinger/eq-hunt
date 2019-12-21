@@ -74,4 +74,25 @@ contract("EqHunt", async (accounts) => {
     assert.isAbove(numResult, 0);
   })
 
+  it("can send reward", async () => {
+
+    let eqHunt = await EqHunt.deployed();
+
+    let initialContractBalance = await eqHunt.getBalance();
+    initialContractBalance = Number(initialContractBalance);
+    let initialAccountBalance = await web3.eth.getBalance(accounts[0]);
+    initialAccountBalance = Number(initialAccountBalance);
+
+    await eqHunt.testReward(accounts[0]);
+
+    let postContractBalance = await eqHunt.getBalance();
+    postContractBalance = Number(postContractBalance);
+    let postAccountBalance = await web3.eth.getBalance(accounts[0]);
+    postAccountBalance = Number(postAccountBalance);
+
+    assert.isAbove(postAccountBalance, initialAccountBalance);
+    assert.isBelow(postContractBalance, initialContractBalance);
+
+  })
+
 })
