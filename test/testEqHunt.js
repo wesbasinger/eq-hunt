@@ -95,4 +95,51 @@ contract("EqHunt", async (accounts) => {
 
   })
 
+  it("will not allow an incorrect solve", async () => {
+    let eqHunt = await EqHunt.deployed();
+    await eqHunt.create("CCCC", "3x=9", 3);
+    await truffleAssert.reverts(eqHunt.solve("CCCC", 8));
+  })
+
+
+  it("can solve an equation", async() => {
+    let eqHunt = await EqHunt.deployed();
+    await eqHunt.create("BBBB", "3x=9", 3);
+
+    let initialContractBalance = await eqHunt.getBalance();
+    initialContractBalance = Number(initialContractBalance);
+    let initialAccountBalance = await web3.eth.getBalance(accounts[0]);
+    initialAccountBalance = Number(initialAccountBalance);
+
+    await eqHunt.solve("BBBB", 3);
+
+    let postContractBalance = await eqHunt.getBalance();
+    postContractBalance = Number(postContractBalance);
+    let postAccountBalance = await web3.eth.getBalance(accounts[0]);
+    postAccountBalance = Number(postAccountBalance);
+
+    assert.isAbove(postAccountBalance, initialAccountBalance);
+    assert.isBelow(postContractBalance, initialContractBalance);
+
+  })
+
+  it("can return the correct number of solvers", async() => {
+    let eqHunt = await EqHunt.deployed();
+    await eqHunt.solve("BBBB", 3, {from: accounts[1]});
+    let numSolvers = await eqHunt.getNumSolvers("BBBB");
+    numSolvers = Number(numSolvers);
+    assert.equal(numSolvers, 2);
+  })
+
+  it("will not solve a nonexistent equation", async() => {
+    let eqHunt = await EqHunt.deployed();
+    await truffleAssert.reverts(eqHunt.solve("ZZZZ", 10));
+  })
+
+  it("will not allow a duplicate solve", async () => {
+    let eqHunt = await EqHunt.deployed();
+    await truffleAssert.reverts(eqHunt.solve("BBBB", 3));
+  })
+
+
 })

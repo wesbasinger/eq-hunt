@@ -9,6 +9,7 @@ contract EqHunt {
   }
 
   mapping(string => Equation) equations;
+  mapping(string => address[]) public solvers;
   uint256 private balance;
   address private owner;
 
@@ -50,10 +51,43 @@ contract EqHunt {
     return 40000000000000000/rand();
   }
 
-  function reward(address payable _payee, uint256 _amount) internal {
-    require(balance>=_amount);
-    _payee.transfer(_amount);
-    balance -= _amount;
+  function reward(address payable _payee) internal {
+
+    uint256 r = payout();
+
+    require(balance>=r);
+
+    _payee.transfer(r);
+    balance -= r;
+  }
+
+  function solve(string memory _id, int256 _answer) public returns(bool) {
+    require(!hasSolved(_id));
+    bool correct = check(_id, _answer);
+    require(correct);
+    if(correct) {
+      addSolver(_id);
+      reward(msg.sender);
+    }
+  }
+
+  function addSolver(string memory _id) internal {
+    solvers[_id].push(msg.sender);
+  }
+
+  function hasSolved(string memory _id) internal view returns(bool) {
+    address[] memory _solvers = solvers[_id];
+    for(uint256 i=0; i<_solvers.length; i++) {
+      if(_solvers[i] == msg.sender) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function getNumSolvers(string memory _id) public view returns(uint256) {
+    address[] memory _solvers = solvers[_id];
+    return _solvers.length;
   }
 
   function() payable external {}
@@ -69,11 +103,15 @@ contract EqHunt {
   }
 
   function testReward(address payable _payee) public {
-    reward(_payee, payout());
+    reward(_payee);
   }
 
   function getBalance() public view returns (uint256) {
     return balance;
+  }
+
+  function testHasSolved(string memory _id) public view returns(bool) {
+    return hasSolved(_id);
   }
 
 }
