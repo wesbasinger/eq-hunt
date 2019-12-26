@@ -32,19 +32,19 @@ contract("EqHunt", async (accounts) => {
 
   it("can check an equation with correct answer", async() => {
     let eqHunt = await EqHunt.deployed();
-    const result = await eqHunt.check("AAAA", 5);
+    const result = await eqHunt.testCheck("AAAA", 5);
     assert.equal(result, true);
   })
 
   it("can check an equation with an incorrect answer", async() => {
     let eqHunt = await EqHunt.deployed();
-    const result = await eqHunt.check("AAAA", -4);
+    const result = await eqHunt.testCheck("AAAA", -4);
     assert.equal(result, false);
   })
 
   it("will revert when checking a nonexistent equation", async() => {
     let eqHunt = await EqHunt.deployed();
-    await truffleAssert.reverts(eqHunt.check("ZZZZ", 10));
+    await truffleAssert.reverts(eqHunt.testCheck("ZZZZ", 10));
   })
 
   it("will generate a random number between 1 and 10 inclusive", async() => {
@@ -83,15 +83,18 @@ contract("EqHunt", async (accounts) => {
     let initialAccountBalance = await web3.eth.getBalance(accounts[0]);
     initialAccountBalance = Number(initialAccountBalance);
 
+    setTimeout( async () => {
+      await eqHunt.testReward(accounts[0]);
+      let postContractBalance = await eqHunt.getBalance();
+      postContractBalance = Number(postContractBalance);
+      let postAccountBalance = await web3.eth.getBalance(accounts[0]);
+      postAccountBalance = Number(postAccountBalance);
+
+      assert.isAbove(postAccountBalance, initialAccountBalance);
+      assert.isBelow(postContractBalance, initialContractBalance);
+    }, 15000)
+
     await eqHunt.testReward(accounts[0]);
-
-    let postContractBalance = await eqHunt.getBalance();
-    postContractBalance = Number(postContractBalance);
-    let postAccountBalance = await web3.eth.getBalance(accounts[0]);
-    postAccountBalance = Number(postAccountBalance);
-
-    assert.isAbove(postAccountBalance, initialAccountBalance);
-    assert.isBelow(postContractBalance, initialContractBalance);
 
   })
 
@@ -102,7 +105,7 @@ contract("EqHunt", async (accounts) => {
   })
 
 
-  it("can solve an equation", async() => {
+  it("can solve an equation and get number of solvers", async() => {
     let eqHunt = await EqHunt.deployed();
     await eqHunt.create("BBBB", "3x=9", 3);
 
@@ -111,33 +114,38 @@ contract("EqHunt", async (accounts) => {
     let initialAccountBalance = await web3.eth.getBalance(accounts[0]);
     initialAccountBalance = Number(initialAccountBalance);
 
-    await eqHunt.solve("BBBB", 3);
+    setTimeout( async () => {
+      await eqHunt.solve("BBBB", 3);
 
-    let postContractBalance = await eqHunt.getBalance();
-    postContractBalance = Number(postContractBalance);
-    let postAccountBalance = await web3.eth.getBalance(accounts[0]);
-    postAccountBalance = Number(postAccountBalance);
+      let postContractBalance = await eqHunt.getBalance();
+      postContractBalance = Number(postContractBalance);
+      let postAccountBalance = await web3.eth.getBalance(accounts[0]);
+      postAccountBalance = Number(postAccountBalance);
 
-    assert.isAbove(postAccountBalance, initialAccountBalance);
-    assert.isBelow(postContractBalance, initialContractBalance);
+      assert.isAbove(postAccountBalance, initialAccountBalance);
+      assert.isBelow(postContractBalance, initialContractBalance);
+
+      const solvers = await eqHunt.getSolvers("BBBB");
+      const firstSolverIndex = solvers.indexOf(accounts[0]);
+      const secondSolverIndex = solvers.indexOf(accounts[1]);
+      assert.isAbove(firstSolverIndex, -1);
+      assert.isAbove(secondSolverIndex, -1);
+
+    }, 15000)
+
 
   })
 
   it("can return the correct number of solvers", async() => {
     let eqHunt = await EqHunt.deployed();
-    await eqHunt.solve("BBBB", 3, {from: accounts[1]});
-    let numSolvers = await eqHunt.getNumSolvers("BBBB");
-    numSolvers = Number(numSolvers);
-    assert.equal(numSolvers, 2);
-  })
 
-  it("can return all the solvers of an equation", async () => {
-    let eqHunt = await EqHunt.deployed();
-    const solvers = await eqHunt.getSolvers("BBBB");
-    const firstSolverIndex = solvers.indexOf(accounts[0]);
-    const secondSolverIndex = solvers.indexOf(accounts[1]);
-    assert.isAbove(firstSolverIndex, -1);
-    assert.isAbove(secondSolverIndex, -1);
+    setTimeout(async () => {
+      await eqHunt.solve("BBBB", 3, {from: accounts[1]});
+      let numSolvers = await eqHunt.getNumSolvers("BBBB");
+      numSolvers = Number(numSolvers);
+      assert.equal(numSolvers, 2);
+    }, 15000);
+
   })
 
   it("will not solve a nonexistent equation", async() => {
@@ -147,7 +155,34 @@ contract("EqHunt", async (accounts) => {
 
   it("will not allow a duplicate solve", async () => {
     let eqHunt = await EqHunt.deployed();
-    await truffleAssert.reverts(eqHunt.solve("BBBB", 3));
+
+    setTimeout( async () => {
+      await truffleAssert.reverts(eqHunt.solve("BBBB", 3));
+    }, 15000);
+
+  });
+
+  it("will not allow non owner to call withdraw()", async () => {
+    let eqHunt = await EqHunt.deployed();
+    await truffleAssert.reverts(eqHunt.withdraw({from: accounts[1]}));
+  })
+
+  it("will allow owner to withdraw all funds", async () => {
+    let eqHunt = await EqHunt.deployed();
+
+    const initialContractBalance = await eqHunt.getBalance();
+    const initialAccountBalance = await web3.eth.getBalance(accounts[0]);
+
+    await eqHunt.withdraw({from: accounts[0]});
+
+    const postContractBalance = await eqHunt.getBalance();
+    const postAccountBalance = await web3.eth.getBalance(accounts[0]);
+
+    assert.isAbove(Number(postAccountBalance), Number(initialAccountBalance));
+    assert.isBelow(Number(postContractBalance), Number(initialContractBalance));
+
+    assert.equal(Number(postContractBalance), 0);
+
   })
 
 

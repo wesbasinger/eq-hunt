@@ -10,12 +10,16 @@ contract EqHunt {
 
   mapping(string => Equation) equations;
   mapping(string => address[]) public solvers;
-  uint256 private balance;
-  address private owner;
+  address payable private owner;
+
+  uint256 public lastSolveTime;
+
+  uint256 private delay;
 
   constructor() public payable {
     owner = msg.sender;
-    balance = msg.value;
+    lastSolveTime = now;
+    delay = 10 minutes;
   }
 
   function create(string memory _id, string memory _repr, int _answer) public {
@@ -32,7 +36,7 @@ contract EqHunt {
     return equations[_id].repr;
   }
 
-  function check(string memory _id, int _answer) public view returns(bool) {
+  function check(string memory _id, int _answer) internal view returns(bool) {
 
     require(equations[_id].exists);
 
@@ -55,10 +59,14 @@ contract EqHunt {
 
     uint256 r = payout();
 
-    require(balance>=r);
+    require(address(this).balance>=r);
+
+    require(now - lastSolveTime > delay);
 
     _payee.transfer(r);
-    balance -= r;
+
+    lastSolveTime = now;
+
   }
 
   function solve(string memory _id, int256 _answer) public returns(bool) {
@@ -94,6 +102,11 @@ contract EqHunt {
     return solvers[_id];
   }
 
+  function withdraw() public payable {
+    require(msg.sender == owner);
+    owner.transfer(address(this).balance);
+  }
+
   function() payable external {}
 
   // TEST CODE
@@ -107,15 +120,20 @@ contract EqHunt {
   }
 
   function testReward(address payable _payee) public {
+    lastSolveTime -= 10 minutes;
     reward(_payee);
   }
 
   function getBalance() public view returns (uint256) {
-    return balance;
+    return address(this).balance;
   }
 
   function testHasSolved(string memory _id) public view returns(bool) {
     return hasSolved(_id);
+  }
+
+  function testCheck(string memory _id, int _answer) public view returns(bool) {
+    return check(_id, _answer);
   }
 
 }
