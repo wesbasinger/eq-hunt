@@ -55,7 +55,7 @@ contract EqHunt {
   function reward(address payable _payee) public {
 
     require(msg.sender == owner);
-    
+
     uint256 r = payout();
 
     require(address(this).balance>=r);
@@ -64,7 +64,7 @@ contract EqHunt {
 
   }
 
-  function solve(string memory _id, int256 _answer) public payable {
+  function solve(string memory _id, int256 _answer) public {
     require(!hasSolved(_id));
     bool correct = check(_id, _answer);
     require(correct);

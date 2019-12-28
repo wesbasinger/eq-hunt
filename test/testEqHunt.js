@@ -105,19 +105,15 @@ contract("EqHunt", async (accounts) => {
   })
 
 
-  it("can solve an equation and get number of solvers", async() => {
+  it("can solve an equation", async() => {
     let eqHunt = await EqHunt.deployed();
     await eqHunt.create("BBBB", "3x=9", 3);
 
-    await eqHunt.solve("BBBB", 3, {from: accounts[0]});
-    await eqHunt.solve("BBBB", 3, {from: accounts[1]});
-
+    await eqHunt.solve("BBBB", 3);
 
     const solvers = await eqHunt.getSolvers("BBBB");
     const firstSolverIndex = solvers.indexOf(accounts[0]);
-    const secondSolverIndex = solvers.indexOf(accounts[1]);
     assert.isAbove(firstSolverIndex, -1);
-    assert.isAbove(secondSolverIndex, -1);
 
   })
 
