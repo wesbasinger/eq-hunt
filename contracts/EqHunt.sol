@@ -12,17 +12,14 @@ contract EqHunt {
   mapping(string => address[]) public solvers;
   address payable private owner;
 
-  uint256 public lastSolveTime;
-
-  uint256 private delay;
-
   constructor() public payable {
     owner = msg.sender;
-    lastSolveTime = now;
-    delay = 10 minutes;
   }
 
+
   function create(string memory _id, string memory _repr, int _answer) public {
+
+    require(msg.sender == owner);
 
     require(!equations[_id].exists);
 
@@ -55,27 +52,24 @@ contract EqHunt {
     return 40000000000000000/rand();
   }
 
-  function reward(address payable _payee) internal {
+  function reward(address payable _payee) public {
 
+    require(msg.sender == owner);
+    
     uint256 r = payout();
 
     require(address(this).balance>=r);
 
-    require(now - lastSolveTime > delay);
-
     _payee.transfer(r);
-
-    lastSolveTime = now;
 
   }
 
-  function solve(string memory _id, int256 _answer) public returns(bool) {
+  function solve(string memory _id, int256 _answer) public payable {
     require(!hasSolved(_id));
     bool correct = check(_id, _answer);
     require(correct);
     if(correct) {
       addSolver(_id);
-      reward(msg.sender);
     }
   }
 
@@ -120,7 +114,6 @@ contract EqHunt {
   }
 
   function testReward(address payable _payee) public {
-    lastSolveTime -= 10 minutes;
     reward(_payee);
   }
 

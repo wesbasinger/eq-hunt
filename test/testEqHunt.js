@@ -83,16 +83,16 @@ contract("EqHunt", async (accounts) => {
     let initialAccountBalance = await web3.eth.getBalance(accounts[0]);
     initialAccountBalance = Number(initialAccountBalance);
 
-    setTimeout( async () => {
-      await eqHunt.testReward(accounts[0]);
-      let postContractBalance = await eqHunt.getBalance();
-      postContractBalance = Number(postContractBalance);
-      let postAccountBalance = await web3.eth.getBalance(accounts[0]);
-      postAccountBalance = Number(postAccountBalance);
 
-      assert.isAbove(postAccountBalance, initialAccountBalance);
-      assert.isBelow(postContractBalance, initialContractBalance);
-    }, 15000)
+    await eqHunt.testReward(accounts[0]);
+    let postContractBalance = await eqHunt.getBalance();
+    postContractBalance = Number(postContractBalance);
+    let postAccountBalance = await web3.eth.getBalance(accounts[0]);
+    postAccountBalance = Number(postAccountBalance);
+
+    assert.isAbove(postAccountBalance, initialAccountBalance);
+    assert.isBelow(postContractBalance, initialContractBalance);
+
 
     await eqHunt.testReward(accounts[0]);
 
@@ -109,42 +109,26 @@ contract("EqHunt", async (accounts) => {
     let eqHunt = await EqHunt.deployed();
     await eqHunt.create("BBBB", "3x=9", 3);
 
-    let initialContractBalance = await eqHunt.getBalance();
-    initialContractBalance = Number(initialContractBalance);
-    let initialAccountBalance = await web3.eth.getBalance(accounts[0]);
-    initialAccountBalance = Number(initialAccountBalance);
+    await eqHunt.solve("BBBB", 3, {from: accounts[0]});
+    await eqHunt.solve("BBBB", 3, {from: accounts[1]});
 
-    setTimeout( async () => {
-      await eqHunt.solve("BBBB", 3);
 
-      let postContractBalance = await eqHunt.getBalance();
-      postContractBalance = Number(postContractBalance);
-      let postAccountBalance = await web3.eth.getBalance(accounts[0]);
-      postAccountBalance = Number(postAccountBalance);
-
-      assert.isAbove(postAccountBalance, initialAccountBalance);
-      assert.isBelow(postContractBalance, initialContractBalance);
-
-      const solvers = await eqHunt.getSolvers("BBBB");
-      const firstSolverIndex = solvers.indexOf(accounts[0]);
-      const secondSolverIndex = solvers.indexOf(accounts[1]);
-      assert.isAbove(firstSolverIndex, -1);
-      assert.isAbove(secondSolverIndex, -1);
-
-    }, 15000)
-
+    const solvers = await eqHunt.getSolvers("BBBB");
+    const firstSolverIndex = solvers.indexOf(accounts[0]);
+    const secondSolverIndex = solvers.indexOf(accounts[1]);
+    assert.isAbove(firstSolverIndex, -1);
+    assert.isAbove(secondSolverIndex, -1);
 
   })
 
   it("can return the correct number of solvers", async() => {
     let eqHunt = await EqHunt.deployed();
 
-    setTimeout(async () => {
-      await eqHunt.solve("BBBB", 3, {from: accounts[1]});
-      let numSolvers = await eqHunt.getNumSolvers("BBBB");
-      numSolvers = Number(numSolvers);
-      assert.equal(numSolvers, 2);
-    }, 15000);
+    await eqHunt.solve("BBBB", 3, {from: accounts[1]});
+    let numSolvers = await eqHunt.getNumSolvers("BBBB");
+    numSolvers = Number(numSolvers);
+    assert.equal(numSolvers, 2);
+
 
   })
 
